@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Job Hunting Agent — Lorena Melo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #fafaf8;
+      --bg-secondary: #f5f4f0;
+      --bg-card: #ffffff;
+      
+      --sage: #839976;
+      --sage-light: rgba(131, 153, 118, 0.12);
+      --sage-border: rgba(131, 153, 118, 0.25);
+      
+      --terracotta: #ba6b4f;
+      --terracotta-light: rgba(186, 107, 79, 0.10);
+      
+      --text-primary: #2c2c2a;
+      --text-secondary: #5f5e5a;
+      --text-muted: #888780;
+      
+      --border-light: rgba(0, 0, 0, 0.06);
+      
+      --font-serif: 'DM Serif Display', Georgia, serif;
+      --font-sans: 'DM Sans', -apple-system, sans-serif;
+      --font-mono: 'DM Mono', monospace;
+
+      /* Diagram colors */
+      --blue-50: #E6F1FB;
+      --blue-600: #185FA5;
+      --blue-800: #0C447C;
+      --teal-50: #E1F5EE;
+      --teal-600: #0F6E56;
+      --teal-800: #085041;
+      --amber-50: #FAEEDA;
+      --amber-600: #854F0B;
+      --amber-800: #633806;
+      --purple-50: #EEEDFE;
+      --purple-600: #534AB7;
+      --purple-800: #3C3489;
+      --coral-50: #FAECE7;
+      --coral-600: #993C1D;
+      --coral-800: #712B13;
+      --gray-50: #F1EFE8;
+      --gray-100: #D3D1C7;
+      --gray-600: #5F5E5A;
+      --gray-800: #444441;
+      --green-50: #EAF3DE;
+      --green-600: #3B6D11;
+      --green-800: #27500A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 16px;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(250, 250, 248, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+      max-width: 1100px;
+    }
+
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--sage);
+    }
+
+    /* Hero */
+    .project-hero {
+      padding: 8rem 0 4rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .breadcrumb {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .breadcrumb a {
+      color: var(--sage);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .project-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .project-hero h1 em {
+      font-style: italic;
+      color: var(--sage);
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .meta-item svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--sage);
+    }
+
+    .project-description {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      max-width: 700px;
+    }
+
+    /* Content sections */
+    .content-section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .content-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--sage);
+    }
+
+    .content-section p {
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin-bottom: 1.25rem;
+      max-width: 700px;
+    }
+
+    /* Diagram container */
+    .diagram-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+      overflow-x: auto;
+    }
+
+    .diagram-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .diagram-container svg {
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Tech stack grid */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .tech-card {
+      background: var(--bg-secondary);
+      padding: 1.25rem;
+      border-radius: 6px;
+    }
+
+    .tech-card h4 {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--sage);
+      margin-bottom: 0.5rem;
+    }
+
+    .tech-card p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin: 0;
+    }
+
+    /* Decision list */
+    .decision-list {
+      list-style: none;
+      margin-top: 1.5rem;
+    }
+
+    .decision-list li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
+    .decision-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6rem;
+      width: 8px;
+      height: 8px;
+      background: var(--sage);
+      border-radius: 50%;
+    }
+
+    .decision-list li strong {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* Pipeline stages */
+    .pipeline-stages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .stage-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      padding: 0.5rem 0.875rem;
+      background: var(--sage-light);
+      color: var(--sage);
+      border-radius: 4px;
+    }
+
+    .stage-badge.llm {
+      background: var(--terracotta-light);
+      color: var(--terracotta);
+    }
+
+    /* Metrics grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .metric-card {
+      background: var(--bg-secondary);
+      padding: 1.25rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      color: var(--text-primary);
+    }
+
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Code block */
+    .code-block {
+      background: var(--gray-800);
+      color: #e8e6e1;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 1.25rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    .code-block .comment {
+      color: #888780;
+    }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--sage);
+      text-decoration: none;
+      margin-top: 3rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--terracotta);
+    }
+
+    .back-link svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-light);
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer .container {
+      max-width: 1100px;
+    }
+
+    .footer-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+      }
+
+      .project-meta {
+        gap: 1rem;
+      }
+
+      .diagram-container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="index.html" class="logo">Lorena Melo</a>
+      <ul class="nav-links">
+        <li><a href="index.html#expertise">What I do</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="project-hero">
+    <div class="container">
+      <p class="breadcrumb"><a href="index.html">Home</a> / <a href="index.html#projects">Projects</a> / AI Job Hunting Agent</p>
+      <h1>AI Job Hunting Agent</h1>
+      <div class="project-meta">
+        <span class="meta-item">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+          </svg>
+          Started Jan 2026
+        </span>
+        <span class="meta-item">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+          </svg>
+          11 phases completed
+        </span>
+        <span class="meta-item">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+          </svg>
+          ~430 tests passing
+        </span>
+      </div>
+      <p class="project-description">
+        An autonomous system that discovers job postings from multiple sources, 
+        scores them against my profile using LLM-powered matching, generates 
+        tailored resumes, and delivers weekly digests via email. Built with 
+        defensive architecture principles — state machines, graceful failure, 
+        and full observability.
+      </p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <p class="section-label">The problem</p>
+      <h2 class="section-title">Job hunting is a <em>manual grind</em></h2>
+      <p>
+        Searching for AI/ML engineering roles means checking multiple job boards daily, 
+        reading through dozens of job descriptions to assess fit, tailoring resumes for 
+        each application, and tracking what you've applied to. It's repetitive, time-consuming, 
+        and error-prone.
+      </p>
+      <p>
+        I wanted to automate the entire funnel — from discovery to resume generation — 
+        while maintaining human oversight over the final application decision. The system 
+        runs autonomously, but I control what gets submitted.
+      </p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <p class="section-label">System architecture</p>
+      <h2 class="section-title">The <em>pipeline</em> at a glance</h2>
+      <p>
+        The system is a multi-stage pipeline orchestrated by GitHub Actions. 
+        Each stage has a single responsibility, with clear boundaries and 
+        failure isolation.
+      </p>
+
+      <div class="pipeline-stages">
+        <span class="stage-badge">Discovery</span>
+        <span class="stage-badge">Dedup</span>
+        <span class="stage-badge">Fetch</span>
+        <span class="stage-badge">Filter</span>
+        <span class="stage-badge llm">Match (LLM)</span>
+        <span class="stage-badge llm">Tailor (LLM)</span>
+        <span class="stage-badge">Resume Gen</span>
+        <span class="stage-badge">Email</span>
+      </div>
+
+      <div class="diagram-container">
+        <p class="diagram-title">High-level data flow</p>
+        <svg width="100%" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <!-- Job Sources (left column) -->
+          <rect x="30" y="60" width="140" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="86" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">Greenhouse</text>
+          
+          <rect x="30" y="120" width="140" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="146" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">Ashby</text>
+          
+          <rect x="30" y="180" width="140" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="206" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">RemoteOK</text>
+          
+          <rect x="30" y="240" width="140" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="266" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">WeWorkRemotely</text>
+
+          <text x="100" y="40" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--text-muted)">JOB SOURCES</text>
+
+          <!-- Arrows from sources to Discovery -->
+          <line x1="170" y1="82" x2="230" y2="160" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="170" y1="142" x2="230" y2="160" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="170" y1="202" x2="230" y2="175" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="170" y1="262" x2="230" y2="190" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+
+          <!-- Daily Pipeline Box -->
+          <rect x="220" y="90" width="350" height="200" rx="12" fill="none" stroke="var(--sage)" stroke-width="1" stroke-dasharray="6 4"/>
+          <text x="395" y="110" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--sage)">DAILY PIPELINE (08:00 BRT)</text>
+
+          <!-- Discovery -->
+          <rect x="250" y="130" width="120" height="50" rx="6" fill="var(--teal-50)" stroke="var(--teal-600)" stroke-width="0.5"/>
+          <text x="310" y="152" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--teal-800)">Discovery</text>
+          <text x="310" y="168" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="var(--teal-600)">API calls</text>
+
+          <!-- Dedup + Filter -->
+          <rect x="250" y="200" width="120" height="50" rx="6" fill="var(--teal-50)" stroke="var(--teal-600)" stroke-width="0.5"/>
+          <text x="310" y="222" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--teal-800)">Dedup + Filter</text>
+          <text x="310" y="238" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="var(--teal-600)">Fingerprint</text>
+
+          <!-- Match -->
+          <rect x="420" y="130" width="120" height="50" rx="6" fill="var(--coral-50)" stroke="var(--coral-600)" stroke-width="0.5"/>
+          <text x="480" y="152" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--coral-800)">Match</text>
+          <text x="480" y="168" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="var(--coral-600)">Claude API</text>
+
+          <!-- Arrows inside daily pipeline -->
+          <line x1="310" y1="180" x2="310" y2="198" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <path d="M370 225 L390 225 L390 155 L418 155" fill="none" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+
+          <!-- Database -->
+          <ellipse cx="480" cy="240" rx="50" ry="20" fill="var(--purple-50)" stroke="var(--purple-600)" stroke-width="0.5"/>
+          <rect x="430" y="240" width="100" height="30" fill="var(--purple-50)" stroke="none"/>
+          <ellipse cx="480" cy="270" rx="50" ry="20" fill="var(--purple-50)" stroke="var(--purple-600)" stroke-width="0.5"/>
+          <line x1="430" y1="240" x2="430" y2="270" stroke="var(--purple-600)" stroke-width="0.5"/>
+          <line x1="530" y1="240" x2="530" y2="270" stroke="var(--purple-600)" stroke-width="0.5"/>
+          <text x="480" y="260" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--purple-800)">Supabase</text>
+
+          <line x1="480" y1="180" x2="480" y2="218" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+
+          <!-- Weekly Pipeline Box -->
+          <rect x="590" y="90" width="180" height="200" rx="12" fill="none" stroke="var(--terracotta)" stroke-width="1" stroke-dasharray="6 4"/>
+          <text x="680" y="110" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--terracotta)">WEEKLY (MON 09:00)</text>
+
+          <!-- Tailor -->
+          <rect x="620" y="130" width="120" height="50" rx="6" fill="var(--coral-50)" stroke="var(--coral-600)" stroke-width="0.5"/>
+          <text x="680" y="152" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--coral-800)">Tailor</text>
+          <text x="680" y="168" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="var(--coral-600)">Claude API</text>
+
+          <!-- Resume Gen -->
+          <rect x="620" y="200" width="120" height="50" rx="6" fill="var(--green-50)" stroke="var(--green-600)" stroke-width="0.5"/>
+          <text x="680" y="222" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--green-800)">Resume Gen</text>
+          <text x="680" y="238" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="var(--green-600)">python-docx</text>
+
+          <!-- Arrows weekly -->
+          <line x1="530" y1="255" x2="618" y2="155" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="680" y1="180" x2="680" y2="198" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+
+          <!-- Email output -->
+          <rect x="620" y="310" width="120" height="50" rx="6" fill="var(--amber-50)" stroke="var(--amber-600)" stroke-width="0.5"/>
+          <text x="680" y="332" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--amber-800)">Email Digest</text>
+          <text x="680" y="348" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="var(--amber-600)">SMTP</text>
+
+          <line x1="680" y1="250" x2="680" y2="308" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+
+          <!-- Me (recipient) -->
+          <circle cx="680" cy="395" r="20" fill="var(--sage-light)" stroke="var(--sage)" stroke-width="0.5"/>
+          <text x="680" y="400" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="var(--sage)">Me</text>
+          
+          <line x1="680" y1="360" x2="680" y2="373" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+
+          <!-- Legend -->
+          <rect x="30" y="330" width="12" height="12" rx="2" fill="var(--teal-50)" stroke="var(--teal-600)" stroke-width="0.5"/>
+          <text x="50" y="340" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">No LLM (fast)</text>
+          
+          <rect x="30" y="355" width="12" height="12" rx="2" fill="var(--coral-50)" stroke="var(--coral-600)" stroke-width="0.5"/>
+          <text x="50" y="365" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">Uses Claude API</text>
+
+          <rect x="30" y="380" width="12" height="12" rx="2" fill="var(--purple-50)" stroke="var(--purple-600)" stroke-width="0.5"/>
+          <text x="50" y="390" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">Persistent storage</text>
+        </svg>
+      </div>
+
+      <p>
+        The pipeline splits into two workflows: a <strong>daily</strong> run that discovers and scores new jobs, 
+        and a <strong>weekly</strong> run that generates tailored resumes and sends the digest. This separation 
+        prevents cross-VM file issues and keeps costs predictable.
+      </p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <p class="section-label">State management</p>
+      <h2 class="section-title">Jobs as a <em>state machine</em></h2>
+      <p>
+        Every job in the database has a state that tracks its progress through the pipeline. 
+        This enables graceful failure recovery — if the matching stage fails mid-run, we can 
+        resume from exactly where we stopped.
+      </p>
+
+      <div class="diagram-container">
+        <p class="diagram-title">Job state transitions</p>
+        <svg width="100%" viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <!-- States -->
+          <rect x="40" y="100" width="100" height="44" rx="6" fill="var(--gray-50)" stroke="var(--gray-600)" stroke-width="0.5"/>
+          <text x="90" y="126" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--gray-800)">DISCOVERED</text>
+
+          <rect x="180" y="100" width="100" height="44" rx="6" fill="var(--teal-50)" stroke="var(--teal-600)" stroke-width="0.5"/>
+          <text x="230" y="126" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--teal-800)">FETCHED</text>
+
+          <rect x="320" y="100" width="100" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="370" y="126" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--blue-800)">FILTERED</text>
+
+          <rect x="460" y="100" width="100" height="44" rx="6" fill="var(--coral-50)" stroke="var(--coral-600)" stroke-width="0.5"/>
+          <text x="510" y="126" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--coral-800)">MATCHED</text>
+
+          <rect x="600" y="100" width="100" height="44" rx="6" fill="var(--green-50)" stroke="var(--green-600)" stroke-width="0.5"/>
+          <text x="650" y="118" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="500" fill="var(--green-800)">RESUME</text>
+          <text x="650" y="134" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="500" fill="var(--green-800)">GENERATED</text>
+
+          <rect x="710" y="100" width="70" height="44" rx="6" fill="var(--amber-50)" stroke="var(--amber-600)" stroke-width="0.5"/>
+          <text x="745" y="126" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--amber-800)">EMAILED</text>
+
+          <!-- Error state -->
+          <rect x="320" y="200" width="100" height="44" rx="6" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5"/>
+          <text x="370" y="226" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="#791F1F">ERROR</text>
+
+          <!-- Filtered out state -->
+          <rect x="180" y="200" width="100" height="44" rx="6" fill="var(--gray-50)" stroke="var(--gray-600)" stroke-width="0.5"/>
+          <text x="230" y="218" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="500" fill="var(--gray-800)">FILTERED</text>
+          <text x="230" y="234" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="500" fill="var(--gray-800)">OUT</text>
+
+          <!-- Not selected state -->
+          <rect x="460" y="200" width="100" height="44" rx="6" fill="var(--gray-50)" stroke="var(--gray-600)" stroke-width="0.5"/>
+          <text x="510" y="218" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="500" fill="var(--gray-800)">NOT</text>
+          <text x="510" y="234" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="500" fill="var(--gray-800)">SELECTED</text>
+
+          <!-- Arrows -->
+          <line x1="140" y1="122" x2="178" y2="122" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow2)"/>
+          <line x1="280" y1="122" x2="318" y2="122" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow2)"/>
+          <line x1="420" y1="122" x2="458" y2="122" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow2)"/>
+          <line x1="560" y1="122" x2="598" y2="122" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow2)"/>
+          <line x1="700" y1="122" x2="708" y2="122" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow2)"/>
+
+          <!-- To error -->
+          <path d="M370 144 L370 198" fill="none" stroke="#F09595" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrow2)"/>
+          
+          <!-- To filtered out -->
+          <path d="M230 144 L230 198" fill="none" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow2)"/>
+          
+          <!-- To not selected (score < 70) -->
+          <path d="M510 144 L510 198" fill="none" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow2)"/>
+
+          <!-- Labels -->
+          <text x="90" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">New job found</text>
+          <text x="230" y="175" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">Ineligible</text>
+          <text x="510" y="175" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">Score &lt; 70</text>
+          <text x="408" y="175" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">Any failure</text>
+        </svg>
+      </div>
+
+      <p>
+        The state machine ensures idempotency: running the same stage twice on the same job 
+        is a no-op. This is critical for CI/CD reliability — if GitHub Actions retries a failed 
+        run, we don't reprocess jobs or send duplicate emails.
+      </p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <p class="section-label">Anti-hallucination</p>
+      <h2 class="section-title">LLM with <em>guardrails</em></h2>
+      <p>
+        The biggest risk with LLM-generated resumes is hallucination — the model inventing 
+        skills or experiences I don't have. Phase 10 introduced a tool-calling architecture 
+        that makes this structurally impossible.
+      </p>
+
+      <div class="diagram-container">
+        <p class="diagram-title">Resume tailoring with validation</p>
+        <svg width="100%" viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <!-- Master Resume (source of truth) -->
+          <rect x="40" y="40" width="160" height="240" rx="8" fill="var(--green-50)" stroke="var(--green-600)" stroke-width="0.5"/>
+          <text x="120" y="70" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--green-800)">Master resume</text>
+          <text x="120" y="90" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--green-600)">YAML — v2.1.0</text>
+          
+          <text x="60" y="120" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">experiences:</text>
+          <text x="70" y="138" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">- id: exp_jnj</text>
+          <text x="70" y="154" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">- id: exp_bmw</text>
+          <text x="70" y="170" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">- id: exp_unb</text>
+          <text x="60" y="195" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">bullets:</text>
+          <text x="70" y="213" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">- id: bul_001</text>
+          <text x="70" y="229" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">- id: bul_002</text>
+          <text x="70" y="245" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">- id: bul_...</text>
+
+          <!-- Arrow to Claude -->
+          <line x1="200" y1="160" x2="258" y2="160" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow3)"/>
+
+          <!-- Claude (tool calling) -->
+          <rect x="260" y="100" width="200" height="120" rx="8" fill="var(--coral-50)" stroke="var(--coral-600)" stroke-width="0.5"/>
+          <text x="360" y="130" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--coral-800)">Claude API</text>
+          <text x="360" y="150" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--coral-600)">Tool calling mode</text>
+          
+          <text x="280" y="180" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">select_bullets(</text>
+          <text x="290" y="196" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">ids=["bul_001",</text>
+          <text x="310" y="212" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">"bul_014"])</text>
+
+          <!-- Arrow to Validator -->
+          <line x1="460" y1="160" x2="518" y2="160" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow3)"/>
+
+          <!-- Validator -->
+          <rect x="520" y="100" width="140" height="120" rx="8" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="590" y="130" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">Validator</text>
+          <text x="590" y="150" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--blue-600)">validation.py</text>
+          
+          <text x="540" y="178" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">✓ IDs exist</text>
+          <text x="540" y="196" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">✓ No duplicates</text>
+          <text x="540" y="214" font-family="var(--font-mono)" font-size="10" fill="var(--text-secondary)">✓ Count limits</text>
+
+          <!-- Arrow to Generator -->
+          <line x1="660" y1="160" x2="718" y2="160" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow3)"/>
+
+          <!-- Generator -->
+          <rect x="680" y="120" width="100" height="80" rx="8" fill="var(--purple-50)" stroke="var(--purple-600)" stroke-width="0.5"/>
+          <text x="730" y="152" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--purple-800)">Generator</text>
+          <text x="730" y="172" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--purple-600)">python-docx</text>
+          <text x="730" y="192" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--purple-600)">.docx output</text>
+
+          <!-- Key insight box -->
+          <rect x="260" y="250" width="400" height="50" rx="6" fill="var(--sage-light)" stroke="var(--sage-border)" stroke-width="0.5"/>
+          <text x="280" y="275" font-family="var(--font-sans)" font-size="12" fill="var(--text-primary)">
+            <tspan font-weight="500">Key constraint:</tspan> The LLM can only select IDs — it cannot
+          </text>
+          <text x="280" y="292" font-family="var(--font-sans)" font-size="12" fill="var(--text-secondary)">generate text. All resume content comes from the master file.</text>
+        </svg>
+      </div>
+
+      <p>
+        The LLM's only job is to select which pre-written bullet points best match the job description. 
+        It returns a list of IDs, which are then validated against the master resume. If an ID doesn't 
+        exist, the validator rejects it. The generator only uses validated IDs to build the final document.
+      </p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <p class="section-label">Tech stack</p>
+      <h2 class="section-title">Tools and <em>trade-offs</em></h2>
+
+      <div class="tech-grid">
+        <div class="tech-card">
+          <h4>Python</h4>
+          <p>Core pipeline. Type hints with Pydantic for data validation at boundaries.</p>
+        </div>
+        <div class="tech-card">
+          <h4>Supabase (Postgres)</h4>
+          <p>Job storage and state tracking. Free tier, no cold starts, easy migrations.</p>
+        </div>
+        <div class="tech-card">
+          <h4>Claude API</h4>
+          <p>Matching and tailoring. Tool calling for structured output with validation.</p>
+        </div>
+        <div class="tech-card">
+          <h4>GitHub Actions</h4>
+          <p>Orchestration. Cron triggers, secrets management, free for private repos.</p>
+        </div>
+        <div class="tech-card">
+          <h4>python-docx</h4>
+          <p>Resume generation. Direct OOXML manipulation, no external dependencies.</p>
+        </div>
+        <div class="tech-card">
+          <h4>Streamlit</h4>
+          <p>Monitoring dashboard. Portfolio colors, local-first with Supabase backend.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <p class="section-label">Key decisions</p>
+      <h2 class="section-title">Trade-offs and <em>rationale</em></h2>
+
+      <ul class="decision-list">
+        <li>
+          <strong>Separate daily/weekly workflows</strong> — GitHub Actions VMs are ephemeral. 
+          Running discovery and email in the same workflow meant generated resumes were lost 
+          between stages. Splitting them with Supabase as the handoff point solved this.
+        </li>
+        <li>
+          <strong>Fingerprint-based deduplication</strong> — The same job appears on multiple 
+          boards (RemoteOK, WeWorkRemotely, company ATS). A normalized fingerprint (company + 
+          title + location hash) ensures each job is processed once.
+        </li>
+        <li>
+          <strong>70% match threshold</strong> — After testing, jobs below 70% match score 
+          rarely led to interviews. The threshold balances recall (don't miss good jobs) with 
+          precision (don't waste time on poor fits).
+        </li>
+        <li>
+          <strong>No selection phase</strong> — Originally planned a manual review step before 
+          resume generation. In practice, the matching phase is accurate enough that all 
+          matched jobs go straight to resume generation.
+        </li>
+        <li>
+          <strong>Tool calling for anti-hallucination</strong> — Free-form LLM output required 
+          complex parsing and still hallucinated. Tool calling with ID-only returns made 
+          validation trivial and hallucination structurally impossible.
+        </li>
+        <li>
+          <strong>Resumes not in git</strong> — Generated .docx files contain personal info 
+          and are job-specific. They go directly to email, not tracked in the repository.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <p class="section-label">Results</p>
+      <h2 class="section-title">Current <em>metrics</em></h2>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <p class="metric-value">294</p>
+          <p class="metric-label">Jobs discovered</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-value">19</p>
+          <p class="metric-label">Resumes sent</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-value">$0.73</p>
+          <p class="metric-label">API cost (tracked)</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-value">~430</p>
+          <p class="metric-label">Tests passing</p>
+        </div>
+      </div>
+
+      <p style="margin-top: 2rem;">
+        The system runs autonomously every day, surfacing relevant opportunities without 
+        manual effort. API costs are minimal — about $0.01 per job for matching, $0.02 per 
+        resume for tailoring.
+      </p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <p class="section-label">What's next</p>
+      <h2 class="section-title">Phase 12: Matching <em>refinement</em></h2>
+
+      <p>
+        The next phase will add feedback tracking to improve match quality over time. 
+        By recording which matched jobs led to interviews, I can tune the scoring 
+        algorithm and threshold based on real outcomes rather than intuition.
+      </p>
+
+      <div class="code-block">
+        <span class="comment"># Planned additions to jobs table</span><br>
+        applied: boolean<br>
+        got_interview: boolean<br>
+        feedback_notes: text<br>
+        <br>
+        <span class="comment"># Analysis query</span><br>
+        SELECT match_score, COUNT(*) as total,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUM(got_interview::int) as interviews<br>
+        FROM jobs WHERE applied = true<br>
+        GROUP BY match_score ORDER BY match_score;
+      </div>
+
+      <a href="index.html#projects" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to all projects
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p class="footer-text">© 2026 Lorena Melo. Built with care and defensive architecture.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
