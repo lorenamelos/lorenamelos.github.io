@@ -460,13 +460,13 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
           </svg>
-          11 phases completed
+          13 phases completed
         </span>
         <span class="meta-item">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
           </svg>
-          ~430 tests passing
+          ~500 tests passing
         </span>
       </div>
       <p class="project-description">
@@ -502,9 +502,10 @@
       <p class="section-label">System architecture</p>
       <h2 class="section-title">The <em>pipeline</em> at a glance</h2>
       <p>
-        The system is a multi-stage pipeline orchestrated by GitHub Actions. 
-        Each stage has a single responsibility, with clear boundaries and 
-        failure isolation.
+        The system is a multi-stage pipeline, originally orchestrated by GitHub Actions and 
+        recently migrated to Apache Airflow for production-grade scheduling, retries, and 
+        observability via a visual DAG interface. Each stage has a single responsibility, 
+        with clear boundaries and failure isolation.
       </p>
 
       <div class="pipeline-stages">
@@ -528,29 +529,33 @@
           </defs>
 
           <!-- Job Sources (left column) -->
-          <rect x="30" y="60" width="140" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
-          <text x="100" y="86" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">Greenhouse</text>
+          <rect x="30" y="40" width="140" height="38" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="64" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--blue-800)">Greenhouse</text>
           
-          <rect x="30" y="120" width="140" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
-          <text x="100" y="146" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">Ashby</text>
+          <rect x="30" y="90" width="140" height="38" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="114" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--blue-800)">Ashby</text>
           
-          <rect x="30" y="180" width="140" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
-          <text x="100" y="206" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">RemoteOK</text>
+          <rect x="30" y="140" width="140" height="38" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="164" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--blue-800)">Lever</text>
           
-          <rect x="30" y="240" width="140" height="44" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
-          <text x="100" y="266" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="var(--blue-800)">WeWorkRemotely</text>
+          <rect x="30" y="190" width="140" height="38" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="214" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--blue-800)">RemoteOK</text>
+          
+          <rect x="30" y="240" width="140" height="38" rx="6" fill="var(--blue-50)" stroke="var(--blue-600)" stroke-width="0.5"/>
+          <text x="100" y="264" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="var(--blue-800)">WeWorkRemotely</text>
 
-          <text x="100" y="40" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--text-muted)">JOB SOURCES</text>
+          <text x="100" y="25" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--text-muted)">JOB SOURCES (5)</text>
 
           <!-- Arrows from sources to Discovery -->
-          <line x1="170" y1="82" x2="230" y2="160" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
-          <line x1="170" y1="142" x2="230" y2="160" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
-          <line x1="170" y1="202" x2="230" y2="175" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
-          <line x1="170" y1="262" x2="230" y2="190" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="170" y1="59" x2="230" y2="150" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="170" y1="109" x2="230" y2="155" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="170" y1="159" x2="230" y2="165" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="170" y1="209" x2="230" y2="175" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
+          <line x1="170" y1="259" x2="230" y2="190" stroke="var(--gray-100)" stroke-width="1" marker-end="url(#arrow)"/>
 
           <!-- Daily Pipeline Box -->
           <rect x="220" y="90" width="350" height="200" rx="12" fill="none" stroke="var(--sage)" stroke-width="1" stroke-dasharray="6 4"/>
-          <text x="395" y="110" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--sage)">DAILY PIPELINE (08:00 BRT)</text>
+          <text x="395" y="110" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--sage)">DAILY DAG (08:00 BRT)</text>
 
           <!-- Discovery -->
           <rect x="250" y="130" width="120" height="50" rx="6" fill="var(--teal-50)" stroke="var(--teal-600)" stroke-width="0.5"/>
@@ -583,7 +588,7 @@
 
           <!-- Weekly Pipeline Box -->
           <rect x="590" y="90" width="180" height="200" rx="12" fill="none" stroke="var(--terracotta)" stroke-width="1" stroke-dasharray="6 4"/>
-          <text x="680" y="110" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--terracotta)">WEEKLY (MON 09:00)</text>
+          <text x="680" y="110" text-anchor="middle" font-family="var(--font-mono)" font-size="10" letter-spacing="0.1em" fill="var(--terracotta)">WEEKLY DAG (MON 09:00)</text>
 
           <!-- Tailor -->
           <rect x="620" y="130" width="120" height="50" rx="6" fill="var(--coral-50)" stroke="var(--coral-600)" stroke-width="0.5"/>
@@ -711,8 +716,8 @@
 
       <p>
         The state machine ensures idempotency: running the same stage twice on the same job 
-        is a no-op. This is critical for CI/CD reliability — if GitHub Actions retries a failed 
-        run, we don't reprocess jobs or send duplicate emails.
+        is a no-op. This is critical for orchestration reliability — whether Airflow retries a failed 
+        task or GitHub Actions retries a workflow, we don't reprocess jobs or send duplicate emails.
       </p>
     </div>
   </section>
@@ -819,8 +824,12 @@
           <p>Matching and tailoring. Tool calling for structured output with validation.</p>
         </div>
         <div class="tech-card">
+          <h4>Airflow + Docker</h4>
+          <p>Pipeline orchestration. DAG-based scheduling with retries, XCom for task communication, visual monitoring UI. Upgraded from GitHub Actions.</p>
+        </div>
+        <div class="tech-card">
           <h4>GitHub Actions</h4>
-          <p>Orchestration. Cron triggers, secrets management, free for private repos.</p>
+          <p>CI/CD and legacy orchestration. Still available as fallback; Airflow now handles production scheduling.</p>
         </div>
         <div class="tech-card">
           <h4>python-docx</h4>
@@ -869,6 +878,12 @@
           <strong>Resumes not in git</strong> — Generated .docx files contain personal info 
           and are job-specific. They go directly to email, not tracked in the repository.
         </li>
+        <li>
+          <strong>Airflow over GitHub Actions</strong> — GHA worked well for early phases but 
+          lacked visibility into task-level failures and had no built-in retry logic. Airflow 
+          provides a DAG-based UI, automatic retries, XCom for inter-task communication, and a 
+          clear path to cloud deployment (Astronomer) for multi-tenant support.
+        </li>
       </ul>
     </div>
   </section>
@@ -880,20 +895,28 @@
 
       <div class="metrics-grid">
         <div class="metric-card">
-          <p class="metric-value">294</p>
+          <p class="metric-value">330+</p>
           <p class="metric-label">Jobs discovered</p>
         </div>
         <div class="metric-card">
-          <p class="metric-value">19</p>
+          <p class="metric-value">21</p>
           <p class="metric-label">Resumes sent</p>
         </div>
         <div class="metric-card">
-          <p class="metric-value">$0.73</p>
+          <p class="metric-value">$0.80</p>
           <p class="metric-label">API cost (tracked)</p>
         </div>
         <div class="metric-card">
-          <p class="metric-value">~430</p>
+          <p class="metric-value">~500</p>
           <p class="metric-label">Tests passing</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-value">5</p>
+          <p class="metric-label">Job sources</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-value">76</p>
+          <p class="metric-label">Companies tracked</p>
         </div>
       </div>
 
@@ -929,12 +952,13 @@
   <section class="content-section">
     <div class="container">
       <p class="section-label">What's next</p>
-      <h2 class="section-title">Phase 12: Matching <em>refinement</em></h2>
+      <h2 class="section-title">Phase 13: Matching <em>refinement</em></h2>
 
       <p>
-        The next phase will add feedback tracking to improve match quality over time. 
-        By recording which matched jobs led to interviews, I can tune the scoring 
-        algorithm and threshold based on real outcomes rather than intuition.
+        With Airflow orchestration complete and 4+ weeks of production data accumulated, 
+        the next phase adds feedback tracking to improve match quality. By recording which 
+        matched jobs led to interviews, I can tune the scoring algorithm and threshold based 
+        on real outcomes — closing the loop between automation and results.
       </p>
 
       <div class="code-block">
